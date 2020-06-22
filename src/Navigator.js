@@ -1,24 +1,26 @@
 import React from 'react'
-import { enableScreens } from 'react-native-screens';
+//import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createNativeStackNavigator } from 'react-native-screens/native-stack';
+import { createStackNavigator } from '@react-navigation/stack'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Feed from './screens/Feed'
 import AddPhoto from './screens/AddPhoto'
 import Profile from './screens/Profile'
 import Login from './screens/Login'
+import Register from './screens/Register'
 
-enableScreens();
+//enableScreens();
 const Tab = createBottomTabNavigator()
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 function LoginOrProfile() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
     </Stack.Navigator>
   );
 }
