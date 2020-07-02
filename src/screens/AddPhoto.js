@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
+import {addPost} from '../store/actions/posts'
 import {StyleSheet, View, Text, TouchableOpacity, TextInput, Image, Dimensions, Platform, ScrollView, Alert} from 'react-native'
 import ImagePicker from 'react-native-image-picker'
-import Header from '../components/Header'
+
+const noUser = 'Você precisa estar logado para adicionar imagens.'
+const noImage = 'Escolha uma imagem.'
 
 class AddPhoto extends Component {
   state = {
@@ -10,6 +14,11 @@ class AddPhoto extends Component {
   }
 
   pickImage = () => {
+    if (!this.props.name) {
+      Alert.alert('Falha!', noUser)
+      return
+    }
+
     ImagePicker.showImagePicker({
       title: 'Escolha a imagem',
       maxHeight: 600,
@@ -22,7 +31,29 @@ class AddPhoto extends Component {
   }
 
   save = async () => {
-    Alert.alert('Imagem adicionada!', this.state.comment)
+    if (!this.props.name) {
+      Alert.alert('Falha!', noUser)
+      return
+    }
+
+    if (!this.state.image) {
+      Alert.alert('Falha!', noImage)
+      return
+    }
+
+    this.props.onAddPost({
+      id: Math.random(),
+      nickname: this.props.name,
+      email: this.props.email,
+      image: this.state.image,
+      comments: [{
+        nickname: this.props.name,
+        comment: this.state.comment
+      }]
+    })
+
+    this.setState({image: null, comment: ''})
+    this.props.navigation.navigate('Feed')
   }
 
   render() {
@@ -37,7 +68,7 @@ class AddPhoto extends Component {
             <Text style={styles.buttomText}>Escolha a foto</Text>
           </TouchableOpacity>
           <TextInput placeholder='Algum comentário para a foto?' style={styles.input} value={this.state.comment}
-                     onChangeText={comment => this.setState({comment})} />
+                     editable={this.props.name != null} onChangeText={comment => this.setState({comment})} />
           <TouchableOpacity onPress={this.save} style={styles.buttom}>
             <Text style={styles.buttomText}>Salvar</Text>
           </TouchableOpacity>
@@ -83,4 +114,19 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AddPhoto
+//export default AddPhoto
+
+const mapStateToProps = ({user}) => {
+  return {
+    email: user.email,
+    name: user.name,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddPost: post => dispatch(addPost(post))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddPhoto)
