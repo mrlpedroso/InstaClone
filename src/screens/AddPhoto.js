@@ -37,8 +37,8 @@ class AddPhoto extends Component {
     }
 
     if (!this.state.image) {
-      Alert.alert('Falha!', noImage)
-      return
+      //Alert.alert('Falha!', noImage)
+      //return
     }
 
     this.props.onAddPost({
