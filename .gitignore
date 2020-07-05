@@ -57,3 +57,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+#Chave Privada no firebase
+instaclone-f7b13.json
