@@ -1,8 +1,9 @@
-import {USER_LOGGED_IN, USER_LOGGED_OUT} from '../actions/actionTypes'
+import {USER_LOGGED_IN, USER_LOGGED_OUT, LOADING_USER, USER_LOADED} from '../actions/actionTypes'
 
 const initialState = {
   name: null,
-  email: null
+  email: null,
+  isLoadding: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -19,6 +20,17 @@ const reducer = (state = initialState, action) => {
         name: null,
         email: null
       }
+    case LOADING_USER:
+      return {
+        ...state,
+        isLoadding: true
+      }
+    case USER_LOADED: {
+      return {
+        ...state,
+        isLoading: false
+      }
+    }
     default: 
       return state
   }
