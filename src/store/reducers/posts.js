@@ -1,39 +1,16 @@
-import {ADD_POST, ADD_COMMENT} from '../actions/actionTypes'
-import { act } from 'react-test-renderer'
+import {SET_POST, ADD_COMMENT, CREATING_POST, POST_CREATED} from '../actions/actionTypes'
 
 const initialState = {
-  posts: [{
-    id: Math.random(),
-    nickname: 'Rafael',
-    email: 'rafinha@gmail.com',
-    image: require('../../../assets/imgs/fence.jpg'),
-    comments: [{
-      nickname: 'João',
-      comment: 'Engraçado de mais'
-    }, {
-      nickname: 'Henrique',
-      comment: 'Cercadinho maneiro'
-    }]
-  }, {
-    id: Math.random(),
-    nickname: 'Barreto',
-    email: 'barretao@gmail.com',
-    image: require('../../../assets/imgs/bw.jpg'),
-    comments: [{
-      nickname: 'Crazy21',
-      comment: 'Pasto ta seco em'
-    }]
-  }]  
+  posts: [],
+  isUploading: false,
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_POST:
+    case SET_POST:
       return {
         ...state,
-        posts: state.posts.concat({
-          ...action.payload          
-        })
+        posts: action.payload                  
       }
     case ADD_COMMENT:
       return {
@@ -49,6 +26,16 @@ const reducer = (state = initialState, action) => {
           }
           return post
         })
+      }
+    case CREATING_POST:
+      return {
+        ...state,
+        isUploading: true
+      }
+    case POST_CREATED:
+      return {
+        ...state,
+        isUploading: false
       }
     default:
       return state
