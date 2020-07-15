@@ -10,24 +10,38 @@ import AddPhoto from './screens/AddPhoto'
 import Profile from './screens/Profile'
 import Login from './screens/Login'
 import Register from './screens/Register'
+import Splash from './screens/Splash'
 
 //enableScreens();
 const Tab = createBottomTabNavigator()
-const Stack = createStackNavigator();
+const LoginStack = createStackNavigator();
+const SplashStack = createStackNavigator();
+
+function SplashRouter() {
+  return (
+    <NavigationContainer>
+      <SplashStack.Navigator screenOptions={{headerShown: false}}>
+        <SplashStack.Screen name="Splash" component={Splash} />
+        <SplashStack.Screen name="App" component={MenuNavigator} />      
+      </SplashStack.Navigator>
+    </NavigationContainer>
+
+  )
+}
 
 function LoginOrProfile() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Profile" component={Profile} />      
-      <Stack.Screen name="Register" component={Register} />
-    </Stack.Navigator>
+    <LoginStack.Navigator screenOptions={{headerShown: false}}>
+      <LoginStack.Screen name="Login" component={Login} />
+      <LoginStack.Screen name="Profile" component={Profile} />      
+      <LoginStack.Screen name="Register" component={Register} />
+    </LoginStack.Navigator>
   );
 }
 
 function MenuNavigator() {
   return (
-    <NavigationContainer>
+    
       <Tab.Navigator initialRouteName="Feed" tabBarOptions={{ showLabel: false }} >
         <Tab.Screen name="Feed" component={Feed}
           options={{ title: 'Feed', tabBarIcon: ({ tintColor }) => <Icon name='home' size={30} color={tintColor} /> }} />
@@ -36,8 +50,8 @@ function MenuNavigator() {
         <Tab.Screen name="Profile" component={LoginOrProfile}
           options={{ title: 'Profile', tabBarIcon: ({ tintColor }) => <Icon name='user' size={30} color={tintColor} /> }} />          
       </Tab.Navigator>
-    </NavigationContainer>
+    
   )
 }
 
-export default MenuNavigator
+export default SplashRouter

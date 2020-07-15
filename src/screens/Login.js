@@ -5,7 +5,7 @@ import {StyleSheet, View, Text, TouchableOpacity, TextInput} from 'react-native'
 
 class Login extends Component {
   state = {
-    name: 'Murilo',
+    name: '',
     email: '',
     password: ''
   }

@@ -3,7 +3,7 @@ import {setMessage} from './message'
 import axios from 'axios'
 
 export const addPost = post => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(creatingPost())
     axios({
       url: 'uploadImage',
@@ -13,32 +13,48 @@ export const addPost = post => {
         image: post.image.base64
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      dispatch(setMessage({
+        title: 'Erro',
+        text: err
+      }))
+    })
     .then(res => {
         post.image = res.data.imageUrl //substitui a imagem pela url
-        axios.post('/posts.json', {...post})
-          .catch(err => console.log(err))
+        axios.post(`/posts.json?auth=${getState().user.token}`, {...post})
+          .catch(err => {
+            dispatch(setMessage({
+              title: 'Erro',
+              text: err
+            }))
+          })
           .then(res => {
             dispatch(postCreated())
-            dispatch(fetchPosts())
-            dispatch(setMessage({
-              title: 'Sucesso',
-              text: 'Nova Mensagem!'
-            }))
+            dispatch(fetchPosts())            
           })          
     })  
   }
 }
 
 export const addComment = payload => {
-  return dispatch => {
+  return (dispatch, getState) => {
     axios.get(`/posts/${payload.postId}.json`)
-    .catch(err => console.log(err))
+    .catch(err => {
+      dispatch(setMessage({
+        title: 'Erro',
+        text: err
+      }))
+    })
     .then(res => {
       const comments = res.data.comments || []
       comments.push(payload.comment)
-      axios.patch(`/posts/${payload.postId}.json`, {comments})
-        .catch(err => console.log(err))
+      axios.patch(`/posts/${payload.postId}.json?auth=${getState().user.token}`, {comments})
+        .catch(err => {
+          dispatch(setMessage({
+            title: 'Erro',
+            text: err
+          }))
+        })
         .then(res => {
           dispatch(fetchPosts())
         })
@@ -56,7 +72,12 @@ export const setPosts = posts => {
 export const fetchPosts = () => {
   return dispatch => {
     axios.get('/posts.json')
-      .catch(err => console.log(err))
+      .catch(err => {
+        dispatch(setMessage({
+          title: 'Erro',
+          text: err
+        }))
+      })
       .then(res => {
         const rawPosts = res.data
         const posts = []
